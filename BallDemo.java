@@ -35,16 +35,16 @@ public class BallDemo
         myCanvas.drawLine(50, ground, 550, ground);
 
         // crate and show the balls
-        int ballsCreadas = 0;
+        int ballsCreadas = 1;
         HashMap<Integer, BouncingBall> bolas = new HashMap();
         Random random = new Random();
         
-        while (ballsCreadas < numeroBalls){
+        while (ballsCreadas <= numeroBalls){
             int red = random.nextInt(256);
             int green = random.nextInt(256);
             int blue = random.nextInt(256);
             Color color = new Color(red, green, blue);
-            BouncingBall ball = new BouncingBall(50, 50, random.nextInt(50-10)+10, color, ground, myCanvas);
+            BouncingBall ball = new BouncingBall(random.nextInt(50-25)+25, random.nextInt(50-10)+10, random.nextInt(50-10)+10, color, ground, myCanvas);
             ball.draw();
             bolas.put(ballsCreadas, ball);
             ballsCreadas ++;
