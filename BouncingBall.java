@@ -109,7 +109,7 @@ public class BouncingBall
         return yPosition;
     }
     
-    public int getCantidadDeBolasExistentes(){
+    public static int getCantidadDeBolasExistentes(){
         return BOLAS;
     }
 }
