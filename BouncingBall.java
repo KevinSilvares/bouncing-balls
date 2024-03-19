@@ -19,7 +19,7 @@ import java.awt.geom.*;
 public class BouncingBall
 {
     private static final int GRAVITY = 3;  // effect of gravity
-    private static int BOLAS = 0;
+    private static int bolas = 0;
 
     private int ballDegradation = 2;
     private Ellipse2D.Double circle;
@@ -50,7 +50,7 @@ public class BouncingBall
         diameter = ballDiameter;
         groundPosition = groundPos;
         canvas = drawingCanvas;
-        BOLAS ++;
+        bolas ++;
     }
 
     /**
@@ -110,6 +110,6 @@ public class BouncingBall
     }
     
     public static int getCantidadDeBolasExistentes(){
-        return BOLAS;
+        return bolas;
     }
 }
