@@ -1,6 +1,7 @@
 import java.awt.Color;
 import java.util.Random;
 import java.util.HashMap;
+import java.awt.Rectangle;
 
 /**
  * Class BallDemo - a short demonstration showing animation with the 
@@ -38,7 +39,7 @@ public class BallDemo
         int ballsCreadas = 1;
         HashMap<Integer, BouncingBall> bolas = new HashMap();
         Random random = new Random();
-        
+
         while (ballsCreadas <= numeroBalls){
             int red = random.nextInt(256);
             int green = random.nextInt(256);
@@ -49,13 +50,12 @@ public class BallDemo
             bolas.put(ballsCreadas, ball);
             ballsCreadas ++;
         }
-        
 
         // make them bounce
         boolean finished =  false;
         while(!finished) {
             myCanvas.wait(50);// small delay
-            
+
             for(int numeroBola : bolas.keySet()){
                 BouncingBall bola = bolas.get(numeroBola);
                 bola.move();
@@ -66,4 +66,21 @@ public class BallDemo
             }
         }
     }
+
+    public void boxBounce (){
+        myCanvas.draw(new Rectangle(100, 100, 400, 250));
+        Random random = new Random();
+        int red = random.nextInt(256);
+        int green = random.nextInt(256);
+        int blue = random.nextInt(256);
+        Color color = new Color(red, green, blue);
+        BoxBall ball = new BoxBall(random.nextInt(500-100)+100, random.nextInt(350-100)+100, color, myCanvas);
+        ball.draw();
+        boolean finish = false;
+        while(finish == false){
+            myCanvas.wait(50);// small delay
+            ball.move();
+        }
+    }
 }
+
