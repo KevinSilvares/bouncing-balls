@@ -51,8 +51,8 @@ public class BoxBall
         canvas = drawingCanvas;
         bolas ++;
         groundPosition = 350;
-        techo = 130;
-        paredIz = 130;
+        techo = 100;
+        paredIz = 100;
         paredDr = 500;
     }
 
@@ -91,13 +91,13 @@ public class BoxBall
             ySpeed = -ySpeed; 
         }
         
-        if(yPosition <= (techo - diameter) && ySpeed < 0) {
-            yPosition = (int)(techo - diameter);
+        if(yPosition <= techo && ySpeed < 0) {
+            yPosition = (int)techo;
             ySpeed = -ySpeed; 
         }
         
-        if(xPosition <= (paredIz - diameter) && xSpeed < 0) {
-            xPosition = (int)(paredIz - diameter);
+        if(xPosition <= paredIz && xSpeed < 0) {
+            xPosition = (int)paredIz;
             xSpeed = -xSpeed; 
         }
         
