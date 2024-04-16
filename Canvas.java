@@ -218,6 +218,7 @@ public class Canvas
      */
     public void drawString(String text, int x, int y)
     {
+        graphic.setColor(Color.GREEN);
         graphic.drawString(text, x, y);   
         canvas.repaint();
     }
@@ -230,10 +231,10 @@ public class Canvas
      */
     public void eraseString(String text, int x, int y)
     {
-        Color original = graphic.getColor();
+        //Color original = graphic.getColor();
         graphic.setColor(backgroundColor);
         graphic.drawString(text, x, y);   
-        graphic.setColor(original);
+        graphic.setColor(Color.GREEN);
         canvas.repaint();
     }
 

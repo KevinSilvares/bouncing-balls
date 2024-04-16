@@ -70,9 +70,9 @@ public class BallDemo
     public void boxBounce (){
         myCanvas.draw(new Rectangle(100, 100, 400, 250));
         Random random = new Random();
-        int red = random.nextInt(256);
-        int green = random.nextInt(256);
-        int blue = random.nextInt(256);
+        int red = 255;
+        int green = 0;
+        int blue = 0;
         Color color = new Color(red, green, blue);
         BoxBall ball = new BoxBall(random.nextInt(500-100)+100, random.nextInt(350-100)+100, color, myCanvas);
         ball.draw();
@@ -80,6 +80,12 @@ public class BallDemo
         while(finish == false){
             myCanvas.wait(50);// small delay
             ball.move();
+            if(ball.getRebotesRestantes() <= 0){
+                ball.erase();
+                finish = true;
+                myCanvas.drawString("GAME OVER", 280, 225);
+                
+            }
         }
     }
 }

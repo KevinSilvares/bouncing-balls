@@ -1,5 +1,6 @@
 import java.awt.*;
 import java.awt.geom.*;
+import java.util.Random;
 
 /**
  * Class BouncingBall - a graphical ball that observes the effect of gravity. The ball
@@ -32,6 +33,10 @@ public class BoxBall
     private Canvas canvas;
     private int ySpeed = 5;   // initial downward speed
     private int xSpeed = 5;
+    private int rebotesRestantes;
+    private int rojo;
+    private int restarColor;
+    private Color nuevoColor;
 
     /**
      * Constructor for objects of class BouncingBall
@@ -45,15 +50,20 @@ public class BoxBall
      */
     public BoxBall(int xPos, int yPos, Color ballColor, Canvas drawingCanvas)
     {
+        Random rebotesGenerador = new Random();
+        rebotesRestantes = rebotesGenerador.nextInt(5,11);
         xPosition = xPos;
         yPosition = yPos;
         color = ballColor;
+        nuevoColor = color;
         canvas = drawingCanvas;
         bolas ++;
         groundPosition = 350;
         techo = 100;
         paredIz = 100;
         paredDr = 500;
+        rojo = 255;
+        restarColor = 255/rebotesRestantes;
     }
 
     /**
@@ -61,8 +71,10 @@ public class BoxBall
      **/
     public void draw()
     {
-        canvas.setForegroundColor(color);
+        canvas.setForegroundColor(nuevoColor);
         canvas.fillCircle(xPosition, yPosition, diameter);
+        String rebotesString= Integer.toString(rebotesRestantes);
+        canvas.drawString(rebotesString, (xPosition + diameter/2),(yPosition + diameter/2));
     }
 
     /**
@@ -80,7 +92,8 @@ public class BoxBall
     {
         // remove from canvas at the current position
         erase();
-            
+        String rebotesString = Integer.toString(rebotesRestantes);
+        canvas.eraseString(rebotesString, (xPosition + diameter/2),(yPosition + diameter/2));
         // compute new position
         yPosition += ySpeed;
         xPosition += xSpeed;
@@ -88,24 +101,42 @@ public class BoxBall
         // check if it has hit the ground
         if(yPosition >= (groundPosition - diameter) && ySpeed > 0) {
             yPosition = (int)(groundPosition - diameter);
-            ySpeed = -ySpeed; 
+            ySpeed = -ySpeed;
+            rebotesRestantes = rebotesRestantes - 1;
+            
+            rojo = rojo - restarColor;
+            nuevoColor = new Color(rojo, 0, 0);        
         }
         
         if(yPosition <= techo && ySpeed < 0) {
             yPosition = (int)techo;
             ySpeed = -ySpeed; 
+            rebotesRestantes = rebotesRestantes - 1;
+            
+            rojo = rojo - restarColor;
+            nuevoColor = new Color(rojo, 0, 0); 
         }
         
         if(xPosition <= paredIz && xSpeed < 0) {
             xPosition = (int)paredIz;
             xSpeed = -xSpeed; 
+            rebotesRestantes = rebotesRestantes - 1;
+            
+            rojo = rojo - restarColor;
+            nuevoColor = new Color(rojo, 0, 0);   
         }
         
         if(xPosition >= (paredDr - diameter) && xSpeed > 0) {
             xPosition = (int)(paredDr - diameter);
             xSpeed = -xSpeed; 
+            rebotesRestantes = rebotesRestantes - 1;
+            
+            rojo = rojo - restarColor;
+            nuevoColor = new Color(rojo, 0, 0);   
         }
-
+        
+        
+        
         // draw again at new position
         draw();
     }    
@@ -128,5 +159,9 @@ public class BoxBall
     
     public static int getCantidadDeBolasExistentes(){
         return bolas;
+    }
+    
+    public int getRebotesRestantes(){
+        return rebotesRestantes;
     }
 }
