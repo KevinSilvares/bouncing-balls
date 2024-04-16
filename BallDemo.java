@@ -67,25 +67,37 @@ public class BallDemo
         }
     }
 
-    public void boxBounce (){
+    public void boxBounce (int numeroBolas){
+        int bolasDibujadas = 0;
+        HashMap<Integer, BoxBall> bolas = new HashMap();
         myCanvas.draw(new Rectangle(100, 100, 400, 250));
         Random random = new Random();
         int red = 255;
         int green = 0;
         int blue = 0;
         Color color = new Color(red, green, blue);
-        BoxBall ball = new BoxBall(random.nextInt(500-100)+100, random.nextInt(350-100)+100, color, myCanvas);
-        ball.draw();
+        while(bolasDibujadas < numeroBolas){
+            BoxBall ball = new BoxBall(random.nextInt(500-100)+100, random.nextInt(350-100)+100, color, myCanvas);
+            ball.draw();
+            bolasDibujadas++;
+            bolas.put(bolasDibujadas, ball);
+        }
+        
         boolean finish = false;
         while(finish == false){
             myCanvas.wait(50);// small delay
-            ball.move();
-            if(ball.getRebotesRestantes() <= 0){
-                ball.erase();
-                finish = true;
-                myCanvas.drawString("GAME OVER", 280, 225);
-                
+            
+            for(int numeroBall : bolas.keySet()){
+                BoxBall ball = bolas.get(numeroBall);
+                ball.move();
+                if(ball.getRebotesRestantes() <= 0){
+                    ball.erase();
+                    finish = true;
+                    myCanvas.drawString("GAME OVER", 280, 225);
+                    
+                }
             }
+            
         }
     }
 }
