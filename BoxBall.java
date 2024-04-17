@@ -19,7 +19,7 @@ import java.util.Random;
 
 public class BoxBall
 {
-    private static int bolas = 0;
+    private static int bolasMuertas = 0;
     private static final int diameter = 30;  // effect of gravity
 
     private Ellipse2D.Double circle;
@@ -31,12 +31,14 @@ public class BoxBall
     private final int paredIz;
     private final int paredDr;
     private Canvas canvas;
-    private int ySpeed = 5;   // initial downward speed
-    private int xSpeed = 5;
+    private int ySpeed = 3;   // initial downward speed
+    private int xSpeed = 3;
     private int rebotesRestantes;
     private int rojo;
     private int restarColor;
     private Color nuevoColor;
+    private boolean escapado;
+    private Random random;
 
     /**
      * Constructor for objects of class BouncingBall
@@ -48,22 +50,24 @@ public class BoxBall
      * @param groundPos  the position of the ground (where the wall will bounce)
      * @param drawingCanvas  the canvas to draw this ball on
      */
-    public BoxBall(int xPos, int yPos, Color ballColor, Canvas drawingCanvas)
+    public BoxBall(int xPos, int yPos, Color ballColor, Canvas drawingCanvas, int idBola)
     {
         Random rebotesGenerador = new Random();
+        random = new Random();
         rebotesRestantes = rebotesGenerador.nextInt(5,11);
         xPosition = xPos;
         yPosition = yPos;
         color = ballColor;
         nuevoColor = color;
         canvas = drawingCanvas;
-        bolas ++;
-        groundPosition = 350;
+        bolasMuertas = 0;
+        groundPosition = 300;
         techo = 100;
         paredIz = 100;
-        paredDr = 500;
+        paredDr = 350;
         rojo = 255;
         restarColor = 255/rebotesRestantes;
+        escapado = false;
     }
 
     /**
@@ -97,49 +101,88 @@ public class BoxBall
         // compute new position
         yPosition += ySpeed;
         xPosition += xSpeed;
-
-        // check if it has hit the ground
-        if(yPosition >= (groundPosition - diameter) && ySpeed > 0) {
-            yPosition = (int)(groundPosition - diameter);
-            ySpeed = -ySpeed;
-            rebotesRestantes = rebotesRestantes - 1;
-            
-            rojo = rojo - restarColor;
-            nuevoColor = new Color(rojo, 0, 0);        
+        
+        //Suelo
+        if(yPosition >= (groundPosition - diameter) && ySpeed > 0 && !escapado){ //compruebo que esta en el suelo
+            if(xPosition >= 200 && xPosition <= 250){ //compruebo que esta en el agujero
+                escapado = true;
+            }else{  // si no esta en el agujero rebota
+                yPosition = 299 - diameter;
+                ySpeed = -ySpeed;
+                rebotesRestantes--;
+                restarColor();
+            }
+        }
+        else if(yPosition >= groundPosition + 50 && escapado){
+            erase();
+            resetearPosicion();
+            escapado = false;
         }
         
-        if(yPosition <= techo && ySpeed < 0) {
-            yPosition = (int)techo;
-            ySpeed = -ySpeed; 
-            rebotesRestantes = rebotesRestantes - 1;
-            
-            rojo = rojo - restarColor;
-            nuevoColor = new Color(rojo, 0, 0); 
+        //Pared Izquierda
+        if(xPosition <= paredIz && xSpeed < 0 && !escapado){
+            if(yPosition <= 250 && yPosition >= 200){
+                escapado = true;
+            }else{
+                xPosition = 101;
+                xSpeed = -xSpeed;
+                rebotesRestantes--;
+                restarColor();
+            }
+        }
+        else if(xPosition <= paredIz - 50 && escapado){
+            erase();
+            resetearPosicion();
+            escapado = false;
         }
         
-        if(xPosition <= paredIz && xSpeed < 0) {
-            xPosition = (int)paredIz;
-            xSpeed = -xSpeed; 
-            rebotesRestantes = rebotesRestantes - 1;
-            
-            rojo = rojo - restarColor;
-            nuevoColor = new Color(rojo, 0, 0);   
+        // Techo
+        if(yPosition <= techo && ySpeed < 0 && !escapado){
+            if(xPosition >= 200 && xPosition <= 250){
+                escapado = true;
+            }else{
+                yPosition = 101;
+                ySpeed = -ySpeed;
+                rebotesRestantes--;
+                restarColor();
+            }
+        }
+        else if(yPosition <= techo - 50 && escapado){
+            erase();
+            resetearPosicion();
+            escapado = false;
         }
         
-        if(xPosition >= (paredDr - diameter) && xSpeed > 0) {
-            xPosition = (int)(paredDr - diameter);
-            xSpeed = -xSpeed; 
-            rebotesRestantes = rebotesRestantes - 1;
-            
-            rojo = rojo - restarColor;
-            nuevoColor = new Color(rojo, 0, 0);   
+        // Pared Derecha
+        if(xPosition >= (paredDr - diameter) && xSpeed > 0 && !escapado){
+            if(yPosition >= 200 && yPosition <= 250){
+                escapado = true;
+            }else{
+                xPosition = 349 - diameter;
+                xSpeed = -xSpeed;
+                rebotesRestantes--;
+                restarColor();
+            }
         }
-        
-        
-        
-        // draw again at new position
+        else if(xPosition >= paredDr + 50 && escapado){
+            erase();
+            resetearPosicion();
+            escapado = false;
+        }
+       
+        // draw again at new position*/
         draw();
-    }    
+        }
+    
+    public void restarColor(){
+        rojo = rojo - restarColor;
+        nuevoColor = new Color(rojo, 0, 0); 
+    }
+    
+    public void resetearPosicion(){
+        xPosition = random.nextInt(120, 320);
+        yPosition = random.nextInt(110,280);
+    }
 
     /**
      * return the horizontal position of this ball
@@ -156,11 +199,11 @@ public class BoxBall
     {
         return yPosition;
     }
-    
-    public static int getCantidadDeBolasExistentes(){
-        return bolas;
+
+    public static int getCantidadDeBolasMuertas(){
+        return bolasMuertas;
     }
-    
+
     public int getRebotesRestantes(){
         return rebotesRestantes;
     }
